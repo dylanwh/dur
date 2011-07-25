@@ -1,0 +1,4 @@
+#!/usr/bin/env perl
+use Dur::Cmd;
+
+Dur::Cmd->run;
