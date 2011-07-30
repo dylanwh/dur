@@ -17,7 +17,7 @@ role {
         my ($self, $opt, $args) = @_;
 
         foreach my $loc ($self->locations) {
-            $self->status($command, $loc);
+            $self->info("Working on " . $loc->name);
             system(
                 $ENV{DUR_DEBUG} ? ( 'echo' ) : (),
                 'duplicity',

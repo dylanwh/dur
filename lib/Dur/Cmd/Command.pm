@@ -7,7 +7,7 @@ use MooseX::Types::Moose ':all';
 use MooseX::Types::Path::Class 'File';
 
 extends 'MooseX::App::Cmd::Command';
-with 'MooseX::Getopt::Dashes';
+with 'MooseX::Getopt::Dashes', 'MooseX::LogDispatch::Levels';
 
 has 'backend' => (
     traits        => ['Getopt'],
@@ -16,6 +16,20 @@ has 'backend' => (
     required      => 1,
     cmd_aliases   => 'b',
     documentation => "Duplicity backend, in the form of a URI prefix",
+);
+
+has 'log_dispatch_conf' => (
+    traits  => ['NoGetopt'],
+    is      => 'ro',
+    isa     => 'HashRef',
+    default => sub {
+        +{  
+            class     => 'Log::Dispatch::Screen',
+            min_level => 'debug',
+            stderr    => 1,
+            format    => '[%p] %m%n',
+        };
+    },
 );
 
 has 'env_file' => (
