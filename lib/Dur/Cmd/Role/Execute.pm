@@ -7,7 +7,7 @@ parameter 'command' => (
     required => 1,
 );
 
-requires 'arguments';
+requires 'arguments', 'run_hook';
 
 with 'Dur::Cmd::Role::ExportEnv';
 
@@ -19,12 +19,14 @@ role {
         my ($self, $opt, $args) = @_;
 
         foreach my $loc ($self->manifest->locations) {
+            $self->run_hook('pre_cmd', $command, $loc->name);
             system(
                 $ENV{DUR_DEBUG} ? ( 'echo' ) : (),
                 'duplicity',
                 $command, 
                 $self->arguments($loc, $args),
             ) and exit 1;
+            $self->run_hook('post_cmd', $command, $loc->name);
         }
     };
 

@@ -33,13 +33,13 @@ has 'locations' => (
 );
 
 sub run_hook {
-    my ($self, $name) = @_;
+    my ($self, $name, @args) = @_;
     if ($self->has_hook($name)) {
         my $dir = tempd();
         my $hook = file($dir, "dur.$name");
         $hook->openw->print( $self->get_hook($name) );
         chmod 0500, $hook;
-        return system($hook, "dur") == 0;
+        return system($hook, @args) == 0;
     }
 }
 
