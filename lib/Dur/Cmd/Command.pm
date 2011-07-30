@@ -58,6 +58,10 @@ has 'env' => (
 sub _build_manifest { return LoadFile($_[0]->manifest_file) }
 sub _build_env      { return LoadFile($_[0]->env_file)      }
 
+sub BUILD {
+    $_[0]->env->export_all;
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
 

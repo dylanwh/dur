@@ -9,8 +9,6 @@ parameter 'command' => (
 
 requires 'arguments', 'run_hook';
 
-with 'Dur::Cmd::Role::ExportEnv';
-
 role {
     my $p = shift;
     my $command = $p->command;
