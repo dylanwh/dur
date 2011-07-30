@@ -45,12 +45,6 @@ role {
 
         return $self->backend . '/' . $loc->name;
     };
-
-    method user_args => sub {
-        my ( $self, $loc, $args ) = @_;
-
-        return @$args;
-    };
 };
 
 1;

@@ -3,11 +3,11 @@ use MooseX::Role::Parameterized;
 use namespace::autoclean;
 
 parameter 'command' => (
-    isa      => 'Str',
+    isa      => 'Maybe[Str]',
     required => 1,
 );
 
-requires 'arguments', 'run_hook';
+requires 'arguments';
 
 role {
     my $p = shift;
@@ -16,20 +16,20 @@ role {
     method execute => sub {
         my ($self, $opt, $args) = @_;
 
-        foreach my $loc ($self->manifest->locations) {
-            $self->run_hook('pre_cmd', $command, $loc->name);
+        foreach my $loc ($self->locations) {
+            $self->status($command, $loc);
             system(
                 $ENV{DUR_DEBUG} ? ( 'echo' ) : (),
                 'duplicity',
-                $command, 
+                defined($command) ? ( $command ) : (),
                 $self->arguments($loc, $args),
             ) and exit 1;
-            $self->run_hook('post_cmd', $command, $loc->name);
         }
     };
 
-    method command_names => sub { return lc $command };
-
+    if (defined $command) {
+        method command_names => sub { return lc $command };
+    }
 };
 
 1;
