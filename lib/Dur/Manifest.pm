@@ -2,16 +2,25 @@ package Dur::Manifest;
 use Moose;
 use namespace::autoclean;
 
+use File::pushd 'tempd';
+use Path::Class 'file';
+
 use MooseX::Types::Moose 'Str', 'ArrayRef';
+
 use Dur::Types 'ArrayOfLocations';
 use Dur::Location;
 
-with 'MooseX::Clone';
+with 'Dur::Role::Options';
 
-has [ 'pre_run', 'post_run' ] => (
-    is       => 'ro',
-    isa      => Str,
-    required => 1,
+has 'hooks' => (
+    traits  => ['Hash'],
+    is      => 'ro',
+    isa     => 'HashRef[Str]',
+    default => sub { +{} },
+    handles => {
+        get_hook => 'get',
+        has_hook => 'exists',
+    },
 );
 
 has 'locations' => (
@@ -20,8 +29,19 @@ has 'locations' => (
     isa      => ArrayOfLocations,
     required => 1,
     coerce   => 1,
-    handles  => { locations => 'elements' },
+    handles  => { locations => 'elements', names => ['map', sub { $_->name }] },
 );
+
+sub run_hook {
+    my ($self, $name) = @_;
+    if ($self->has_hook($name)) {
+        my $dir = tempd();
+        my $hook = file($dir, "dur.$name");
+        $hook->openw->print( $self->get_hook($name) );
+        chmod 0500, $hook;
+        return system($hook, "dur") == 0;
+    }
+}
 
 __PACKAGE__->meta->make_immutable;
 1;

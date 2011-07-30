@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use MooseX::YAML qw(LoadFile -xs);
+use MooseX::Types::Moose ':all';
 use MooseX::Types::Path::Class 'File';
 
 extends 'MooseX::App::Cmd::Command';
@@ -11,10 +12,10 @@ with 'MooseX::Getopt::Dashes';
 has 'prefix' => (
     traits        => ['Getopt'],
     is            => 'ro',
-    isa           => 'Str',
+    isa           => Str,
     required      => 1,
     cmd_aliases   => 'p',
-    documentation => "URI prefix for targets",
+    documentation => "URL prefix",
 );
 
 has 'env_file' => (
@@ -43,6 +44,7 @@ has 'manifest' => (
     isa     => 'Dur::Manifest',
     lazy    => 1,
     builder => '_build_manifest',
+    handles => [qw[ names locations run_hook ]],
 );
 
 has 'env' => (
@@ -53,21 +55,8 @@ has 'env' => (
     builder => '_build_env',
 );
 
-sub _build_manifest {
-    my ($self) = @_;
-    my $manifest = LoadFile($self->manifest_file);
-
-    return $manifest->clone(
-        locations => [
-            map {
-                $_->clone( url => sprintf "%s/%s", $self->prefix, $_->name )
-            } $manifest->locations
-        ],
-    );
-}
-
-
-sub _build_env { LoadFile(shift->env_file) }
+sub _build_manifest { return LoadFile($_[0]->manifest_file) }
+sub _build_env      { return LoadFile($_[0]->env_file)      }
 
 __PACKAGE__->meta->make_immutable;
 1;

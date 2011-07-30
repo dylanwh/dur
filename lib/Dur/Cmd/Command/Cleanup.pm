@@ -5,8 +5,17 @@ use feature 'say';
 
 extends 'Dur::Cmd::Command';
 with 'Dur::Cmd::Role::Execute' => { command => 'cleanup' },
-     'Dur::Cmd::Role::Arguments::URL',
-     'Dur::Cmd::Role::Options::Forceable';
+     'Dur::Cmd::Role::Options',
+     'Dur::Cmd::Role::Option::Force',
+     'Dur::Cmd::Role::Option::Name';
+
+
+sub arguments {
+    my ($self, $loc, $args) = @_;
+
+    return ($self->options($loc), $self->url($loc));
+}
+
 
 __PACKAGE__->meta->make_immutable;
 1;

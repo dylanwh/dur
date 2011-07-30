@@ -7,18 +7,20 @@ parameter 'command' => (
     required => 1,
 );
 
+requires 'arguments';
+
+with 'Dur::Cmd::Role::ExportEnv';
 
 role {
     my $p = shift;
     my $command = $p->command;
 
-    with 'Dur::Cmd::Role::ExportEnv';
-
-    method "execute" => sub {
+    method execute => sub {
         my ($self, $opt, $args) = @_;
 
         foreach my $loc ($self->manifest->locations) {
-            system('echo',
+            system(
+                $ENV{DUR_DEBUG} ? ( 'echo' ) : (),
                 'duplicity',
                 $command, 
                 $self->arguments($loc, $args),
@@ -26,7 +28,8 @@ role {
         }
     };
 
-    method "command_names" => sub { return lc $command };
+    method command_names => sub { return lc $command };
+
 };
 
 1;

@@ -4,12 +4,8 @@ use namespace::autoclean;
 use feature 'say';
 
 extends 'Dur::Cmd::Command';
-
-with
-    'Dur::Cmd::Role::Execute' => { command => 'incremental' },
-    'Dur::Cmd::Role::Arguments::Push',
-    'Dur::Cmd::Role::Options::Forceable',
-    'Dur::Cmd::Role::Options::PerLocation';
+with 'Dur::Cmd::Role::Execute' => { command => 'incremental' },
+     'Dur::Cmd::Role::Backup';
 
 __PACKAGE__->meta->make_immutable;
 1;

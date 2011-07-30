@@ -1,8 +1,6 @@
-package Dur::Cmd::Role::Options::Forceable;
+package Dur::Cmd::Role::Option::Force;
 use Moose::Role;
 use namespace::autoclean;
-
-with 'Dur::Cmd::Role::Options';
 
 has 'force' => (
     traits      => ['Getopt'],
@@ -11,6 +9,8 @@ has 'force' => (
     default     => 0,
     cmd_aliases => 'f',
 );
+
+requires 'options';
 
 around 'options' => sub {
     my $method = shift;

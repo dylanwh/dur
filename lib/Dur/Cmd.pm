@@ -1,3 +1,5 @@
+# ABSTRACT: Duplicity Frontend
+
 package Dur::Cmd;
 use Moose;
 use namespace::autoclean;

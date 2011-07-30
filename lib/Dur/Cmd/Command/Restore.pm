@@ -1,11 +1,11 @@
-package Dur::Cmd::Command::Full;
+package Dur::Cmd::Command::Restore;
 use Moose;
 use namespace::autoclean;
 use feature 'say';
 
 extends 'Dur::Cmd::Command';
-with 'Dur::Cmd::Role::Execute' => { command => 'full' },
-     'Dur::Cmd::Role::Backup';
+with 'Dur::Cmd::Role::Execute' => { command => 'restore' },
+     'Dur::Cmd::Role::Arguments::Restore';
 
 __PACKAGE__->meta->make_immutable;
 1;
