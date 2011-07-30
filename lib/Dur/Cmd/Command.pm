@@ -9,13 +9,13 @@ use MooseX::Types::Path::Class 'File';
 extends 'MooseX::App::Cmd::Command';
 with 'MooseX::Getopt::Dashes';
 
-has 'prefix' => (
+has 'backend' => (
     traits        => ['Getopt'],
     is            => 'ro',
     isa           => Str,
     required      => 1,
-    cmd_aliases   => 'p',
-    documentation => "URL prefix",
+    cmd_aliases   => 'b',
+    documentation => "Duplicity backend, in the form of a URI prefix",
 );
 
 has 'env_file' => (

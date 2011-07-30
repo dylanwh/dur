@@ -13,7 +13,4 @@ __END__
 
 =head1 NAME
 
-Dur::Cmd::Command::Full - Do full backup
-
-__PACKAGE__->meta->make_immutable;
-1;
+Dur::Cmd::Command::Verify - Verify a backup

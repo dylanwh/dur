@@ -11,7 +11,7 @@ role {
     my $p = shift;
     my @methods = @{ $p->spec };
 
-    requires 'prefix', 'manifest', @methods;
+    requires 'backend', 'manifest', @methods;
 
     method 'arguments' => sub {
         my ($self, $loc, $args) = @_;
@@ -43,7 +43,7 @@ role {
     method remote_arg => sub {
         my ( $self, $loc, $args ) = @_;
 
-        return $self->prefix . '/' . $loc->name;
+        return $self->backend . '/' . $loc->name;
     };
 
     method user_args => sub {
